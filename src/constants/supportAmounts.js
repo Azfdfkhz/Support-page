@@ -1,0 +1,1 @@
+export const SUPPORT_AMOUNT_PRESETS = [5000, 15000, 50000];
