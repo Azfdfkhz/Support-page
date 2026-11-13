@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Support Page (Hepi.in)
 
-## Getting Started
+Next.js 16 + Tailwind 4. Mobile-first, content column fixed at max 414px (centered on desktop).
 
-First, run the development server:
+## Flow
+
+`/` intro → `/daftar` → `/ready?slug=…` → `/{slug}` creator page → `/confirm` → `/success`
+
+`/{slug}` is the public page (`hepi.in/Nadya`). Slugs that collide with app routes are rejected
+(see `src/lib/validators.js`).
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # edit values
+npm run dev                  # http://localhost:3000
+npm run lint && npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Configuration
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+See `.env.example`. Key points:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `NEXT_PUBLIC_API_URL` is **required in production**. Without it, production services fail with an
+  error instead of faking success. In development, mock data is used automatically.
+- `NEXT_PUBLIC_ENABLE_MOCKS=true` allows mock data in production (demo deployments only).
+- `NEXT_PUBLIC_CS_WHATSAPP_URL` empty hides the "Kontak CS" button; `NEXT_PUBLIC_LOGIN_URL` empty hides "Masuk".
 
-## Learn More
+## Backend contract (what the code expects)
 
-To learn more about Next.js, take a look at the following resources:
+All calls go through `src/lib/api.js` (15s timeout, `ApiError` with `status` / `code`).
+Error bodies may be `{ "message": "...", "code": "..." }`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Call | Where | Expected |
+| --- | --- | --- |
+| `GET /me` | `services/accountService.js` (server, session cookie forwarded) | `200 { name, avatarUrl }`, `401` when logged out |
+| `POST /support-pages` | `services/registerService.js` (browser, `credentials: include`, multipart: `slug, bio, instagram, tiktok, facebook, photo`) | `201 { slug }`, `409` / `code: SLUG_TAKEN`, `422 { message }` |
+| `GET /creators/{slug}` | `services/creatorService.js` | `200 { name, role, bio, isVerified, coverImageUrl, avatarImageUrl, socials }`, `404` |
+| `GET /creators/{slug}/campaigns` | `services/creatorService.js` | `200 [{ id, title, imageUrl, daysLeft, collectedAmount, targetAmount }]` |
+| `POST /donations` | `services/donationService.js` (JSON, `credentials: include`) | `201 { reference }`, `422 { message }` |
+| `GET /donations/{reference}` | `services/donationService.js` (server) | `200 { reference, amount, paymentLabel, status, campaign }`, `404` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If your API differs, adjust only the files in `src/services/`.
 
-## Deploy on Vercel
+**Security note:** the amount in the `/confirm` URL is only a UI convenience. The backend must validate
+the amount (and min/max in `src/constants/supportAmounts.js`) when creating the donation, and the success
+page shows the amount returned by the API, not the one in the URL.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Design tokens (`src/app/globals.css`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Base `#FBFCFF`, text `#091F40` / `#637DA3`, brand `#2E68B2`, soft `#E5F5FF`, accent `#1A73EB`,
+avatar `#2858A4`, verified `#059669`, love `#EF3554`.
+
+## Production checklist
+
+- [ ] Set the env vars above on the host
+- [ ] Confirm the API contract table with the backend
+- [ ] Replace the image placeholders (campaign thumbnails, cover) with real URLs
+- [ ] Review `experimental.agentFeedback` in `next.config.mjs` (dev tooling flag from the template; remove if not needed)
+- [ ] Add rate limiting / bot protection on `POST /donations` and `POST /support-pages` (backend)

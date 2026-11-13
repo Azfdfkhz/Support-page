@@ -1,4 +1,4 @@
-export default function TextAreaField({ id, label, hint, value, onChange, placeholder, rows = 4 }) {
+export default function TextAreaField({ id, label, hint, value, onChange, placeholder, rows = 4, maxLength }) {
   return (
     <div>
       <label htmlFor={id} className="block text-[13px] font-medium text-ink">
@@ -8,6 +8,7 @@ export default function TextAreaField({ id, label, hint, value, onChange, placeh
         id={id}
         name={id}
         rows={rows}
+        maxLength={maxLength}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
