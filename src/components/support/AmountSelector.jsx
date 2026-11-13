@@ -55,6 +55,7 @@ export default function AmountSelector({
             value={formatThousands(customValue)}
             onChange={(event) => onCustomChange(event.target.value.replace(/\D/g, "").slice(0, 12))}
             placeholder="0"
+            style={{ outline: "none", boxShadow: "none" }}
             className="h-11 w-full rounded-xl bg-transparent text-sm font-semibold text-ink outline-none"
           />
         </div>

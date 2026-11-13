@@ -7,8 +7,8 @@ export default function ProfileHeader({ creator }) {
   const { name, role, bio, isVerified, coverImageUrl, avatarImageUrl, socials } = creator;
 
   return (
-    <header className="relative border-b border-line bg-surface pb-4">
-      <div className="relative h-30 w-full overflow-hidden">
+    <header className="relative z-10 border-b border-line bg-surface pb-4 shadow-[0_4px_10px_-4px_rgba(23,37,74,0.14)]">
+      <div className="relative h-[120px] w-full overflow-hidden">
         <ImageWithFallback src={coverImageUrl} alt="" sizes="414px" priority />
       </div>
 
