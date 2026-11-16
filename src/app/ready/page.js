@@ -19,14 +19,14 @@ async function ReadyContent({ searchParams }) {
     <div className="flex flex-1 flex-col px-5 pb-8 pt-5">
       <ProgressLine progress={1} label="Langkah 2 dari 2" />
 
-      <div className="mt-14 flex flex-col items-center text-center">
-        <div className="relative size-[170px]">
-          <Image src="/Support-success-card-with-gift.png" alt="" fill priority sizes="170px" className="object-contain" />
+      <div className="mt-10 flex flex-col items-center text-center">
+        <div className="relative size-[240px]">
+          <Image src="/Support-success-card-with-gift.png" alt="" fill priority sizes="240px" className="object-contain" />
         </div>
-        <h1 className="mt-10 text-[22px] font-bold leading-tight text-ink">
+        <h1 className="mt-8 text-[24px] font-bold leading-tight text-ink">
           Support Page siap! <span aria-hidden="true">🎉</span>
         </h1>
-        <p className="mt-2 max-w-[280px] text-[13px] leading-relaxed text-muted">
+        <p className="mt-2 max-w-[300px] text-sm leading-relaxed text-muted">
           Bagikan tautanmu agar lebih banyak orang menemukan halaman ini.
         </p>
       </div>

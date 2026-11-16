@@ -42,3 +42,17 @@ textarea:focus-visible {
   outline: none;
   box-shadow: none;
 }
+
+/* Page column: designed at 414px, shown at 511px on desktop (511 / 414 = 1.2343). */
+.app-shell {
+  width: 100%;
+  max-width: 414px;
+  margin-inline: auto;
+  min-height: 100vh;
+}
+@media (min-width: 768px) {
+  .app-shell {
+    zoom: 1.2343;
+    min-height: calc(100vh / 1.2343);
+  }
+}

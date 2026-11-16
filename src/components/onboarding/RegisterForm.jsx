@@ -14,6 +14,11 @@ const MAX_BIO = 300;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 
+// Link name follows the account username (or name) by default, lowercase, no spaces.
+function defaultSlug(account) {
+  return sanitizeSlugInput(String(account.username || account.name || "").toLowerCase());
+}
+
 const labelClass = "block text-[13px] font-semibold text-ink";
 const inputClass =
   "mt-1.5 h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[13px] text-ink placeholder:text-muted outline-none transition-colors focus:border-accent aria-[invalid=true]:border-red-500";
@@ -59,7 +64,7 @@ export default function RegisterForm({ account }) {
   const [photoUrl, setPhotoUrl] = useState("");
   const [bio, setBio] = useState("");
   const [social, setSocial] = useState({ instagram: "", tiktok: "", facebook: "" });
-  const [slug, setSlug] = useState(() => sanitizeSlugInput(account.name));
+  const [slug, setSlug] = useState(() => defaultSlug(account));
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -108,10 +113,19 @@ export default function RegisterForm({ account }) {
       handles[field] = value;
       if (error) next[field] = error;
     }
+    if (!photo) next.photo = "Foto sampul wajib diunggah.";
+    if (!bio.trim()) next.bio = "Bio wajib diisi.";
     const slugError = validateSlug(slug);
     if (slugError) next.slug = slugError;
-    setErrors((prev) => ({ photo: prev.photo, ...next }));
-    if (Object.keys(next).length > 0) return;
+    setErrors(next);
+    if (Object.keys(next).length > 0) {
+      // Bring the first problem into view, in on-screen order.
+      const first = ["photo", "bio", "instagram", "tiktok", "facebook", "slug"].find((field) => next[field]);
+      const target = first === "photo" ? fileInput.current?.nextElementSibling : document.getElementById(first);
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (first !== "photo") target?.focus({ preventScroll: true });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -144,12 +158,13 @@ export default function RegisterForm({ account }) {
       </div>
 
       <div className="mt-5">
-        <span className={labelClass}>Foto sampul</span>
+        <span className={labelClass}>Foto sampul <span className="text-red-600" aria-hidden="true">*</span></span>
         <input ref={fileInput} type="file" accept="image/jpeg,image/png" onChange={handlePhoto} className="sr-only" tabIndex={-1} aria-label="Pilih foto sampul" />
         <button
           type="button"
           onClick={() => fileInput.current?.click()}
-          className="relative mt-1.5 flex h-[100px] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#b9dcf5] bg-brand-soft/60 text-center"
+          aria-invalid={Boolean(errors.photo)}
+          className="relative mt-1.5 flex h-[100px] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#b9dcf5] bg-brand-soft/60 text-center aria-[invalid=true]:border-red-500"
         >
           {photoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -162,11 +177,11 @@ export default function RegisterForm({ account }) {
             </>
           )}
         </button>
-        <FieldError message={errors.photo} />
+        <FieldError id="photo-error" message={errors.photo} />
       </div>
 
       <div className="mt-4">
-        <label htmlFor="bio" className={labelClass}>Bio</label>
+        <label htmlFor="bio" className={labelClass}>Bio <span className="text-red-600" aria-hidden="true">*</span></label>
         <div className="relative mt-1.5">
           <textarea
             id="bio"
@@ -174,12 +189,15 @@ export default function RegisterForm({ account }) {
             rows={4}
             maxLength={MAX_BIO}
             value={bio}
-            onChange={(event) => setBio(event.target.value)}
+            onChange={(event) => { setBio(event.target.value); setError("bio", ""); }}
+            aria-invalid={Boolean(errors.bio)}
+            aria-describedby={errors.bio ? "bio-error" : undefined}
             placeholder="Tuliskan hal yang ingin orang tahu tentangmu..."
-            className="block w-full resize-none rounded-xl border border-line bg-white px-3.5 pb-7 pt-3 text-[13px] text-ink outline-none placeholder:text-muted focus:border-accent"
+            className="block w-full resize-none rounded-xl border border-line bg-white px-3.5 pb-7 pt-3 text-[13px] text-ink outline-none placeholder:text-muted focus:border-accent aria-[invalid=true]:border-red-500"
           />
           <span className="pointer-events-none absolute bottom-2.5 right-3.5 text-[11px] text-muted">{bio.length} / {MAX_BIO}</span>
         </div>
+        <FieldError id="bio-error" message={errors.bio} />
       </div>
 
       <div className="mt-4 space-y-4">
@@ -189,8 +207,8 @@ export default function RegisterForm({ account }) {
       </div>
 
       <div className="mt-4">
-        <label htmlFor="slug" className={labelClass}>Link Support Page</label>
-        <div className="mt-1.5 flex h-11 overflow-hidden rounded-xl border border-line bg-white focus-within:border-accent">
+        <label htmlFor="slug" className={labelClass}>Link Support Page <span className="text-red-600" aria-hidden="true">*</span></label>
+        <div className="mt-1.5 flex h-11 overflow-hidden rounded-xl border border-line bg-white focus-within:border-accent has-[[aria-invalid=true]]:border-red-500">
           <span className="grid shrink-0 place-items-center bg-brand-soft px-4 text-[13px] font-medium text-ink">{SHORT_DOMAIN}/</span>
           <input
             id="slug"
