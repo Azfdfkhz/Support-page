@@ -21,14 +21,14 @@ export default function IntroPage() {
           <Image src="/Waving-support-guide.png" alt="" fill priority sizes="414px" className="object-cover" />
         </div>
 
-        <h1 className="mt-5 text-[22px] font-bold leading-tight text-ink">Buat Support Page untuk dirimu</h1>
-        <p className="mt-2 text-[13px] leading-relaxed text-muted">Satu halaman untuk menerima dukungan dari siapa saja.</p>
+        <h1 className="mt-5 text-[1.375rem] font-bold leading-tight text-ink">Buat Support Page untuk dirimu</h1>
+        <p className="mt-2 text-[0.8125rem] leading-relaxed text-muted">Satu halaman untuk menerima dukungan dari siapa saja.</p>
 
         <ul className="mt-4 space-y-3.5">
           {benefits.map((item) => (
             <li key={item.title} className="flex items-center gap-3">
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft">
-                <Image src={item.icon} alt="" width={20} height={20} />
+                <Image src={item.icon} alt="" width={20} height={20} className="size-5" />
               </span>
               <div>
                 <h2 className="text-sm font-semibold text-ink">{item.title}</h2>
@@ -45,7 +45,7 @@ export default function IntroPage() {
           <ol className="mt-3 grid grid-cols-3">
             {steps.map((step, index) => (
               <li key={step} className="flex flex-col items-center gap-1.5 text-center">
-                <span className="flex size-10 items-center justify-center rounded-full bg-[#E5F5FF] text-[15px] font-semibold leading-none text-[#1A73EB]">
+                <span className="flex size-10 items-center justify-center rounded-full bg-[#E5F5FF] text-[0.9375rem] font-semibold leading-none text-[#1A73EB]">
                   {index + 1}
                 </span>
                 <span className="text-xs font-medium text-ink">{step}</span>
@@ -56,7 +56,7 @@ export default function IntroPage() {
 
         <Link
           href={REGISTER_PATH}
-          className="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl bg-brand text-base font-semibold text-white shadow-[0_6px_14px_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark"
+          className="mt-8 flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-brand text-base font-semibold text-white shadow-[0_0.375rem_0.875rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark"
         >
           Daftar
         </Link>

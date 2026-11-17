@@ -11,12 +11,12 @@ export default function CampaignCard({ title, imageUrl, daysLeft, collectedAmoun
 
   return (
     <article className="flex gap-2.5 py-4">
-      <div className="relative h-[104px] w-[182px] shrink-0 overflow-hidden rounded-md bg-slate-200">
+      <div className="relative h-[6.5rem] w-[11.375rem] shrink-0 overflow-hidden rounded-md bg-slate-200">
         <ImageWithFallback src={imageUrl} alt={title} sizes="182px" />
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <h3 className="line-clamp-2 text-[15px] font-semibold leading-[1.55] text-ink">{title}</h3>
+        <h3 className="line-clamp-2 text-[0.9375rem] font-semibold leading-[1.55] text-ink">{title}</h3>
 
         <div className="mt-2">
           <CampaignProgress percent={percent} />

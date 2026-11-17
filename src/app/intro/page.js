@@ -16,23 +16,23 @@ const steps = ["Daftar", "Bagikan", "Terima support"];
 export default function IntroPage() {
   return (
     <Shell>
-      <div className="flex flex-1 flex-col px-[26px] pb-8 pt-[21px]">
-        <div className="relative aspect-[364/223] w-full overflow-hidden rounded-[28px] bg-brand-soft">
+      <div className="flex flex-1 flex-col px-[1.625rem] pb-8 pt-[1.3125rem]">
+        <div className="relative aspect-[364/223] w-full overflow-hidden rounded-[1.75rem] bg-brand-soft">
           <Image src="/Waving-support-guide.svg" alt="" fill priority unoptimized sizes="414px" className="object-cover" />
         </div>
 
-        <h1 className="mt-6 text-[32px] font-bold leading-[1.2] text-ink">Buat Support Page untuk dirimu</h1>
-        <p className="mt-3 text-[17px] leading-[1.55] text-muted">Satu halaman untuk menerima dukungan dari siapa saja.</p>
+        <h1 className="mt-6 text-[2rem] font-bold leading-[1.2] text-ink">Buat Support Page untuk dirimu</h1>
+        <p className="mt-3 text-[1.0625rem] leading-[1.55] text-muted">Satu halaman untuk menerima dukungan dari siapa saja.</p>
 
         <ul className="mt-5 space-y-4">
           {benefits.map((item) => (
             <li key={item.title} className="flex items-center gap-4">
-              <span className="grid size-[46px] shrink-0 place-items-center rounded-2xl bg-brand-soft">
-                <Image src={item.icon} alt="" width={24} height={24} />
+              <span className="grid size-[2.875rem] shrink-0 place-items-center rounded-2xl bg-brand-soft">
+                <Image src={item.icon} alt="" width={24} height={24} className="size-6" />
               </span>
               <div>
-                <h2 className="text-[17px] font-semibold text-ink">{item.title}</h2>
-                <p className="text-[15px] leading-[1.5] text-muted">{item.text}</p>
+                <h2 className="text-[1.0625rem] font-semibold text-ink">{item.title}</h2>
+                <p className="text-[0.9375rem] leading-[1.5] text-muted">{item.text}</p>
               </div>
             </li>
           ))}
@@ -45,10 +45,10 @@ export default function IntroPage() {
           <ol className="mt-4 flex items-start justify-between px-2">
             {steps.map((step, index) => (
               <li key={step} className="flex flex-col items-center gap-2">
-                <span className="grid size-[45px] place-items-center rounded-full bg-brand-soft text-lg font-semibold text-accent">
+                <span className="grid size-[2.8125rem] place-items-center rounded-full bg-brand-soft text-lg font-semibold text-accent">
                   {index + 1}
                 </span>
-                <span className="text-[15px] font-medium text-ink">{step}</span>
+                <span className="text-[0.9375rem] font-medium text-ink">{step}</span>
               </li>
             ))}
           </ol>
@@ -56,7 +56,7 @@ export default function IntroPage() {
 
         <Link
           href={REGISTER_PATH}
-          className="mt-auto flex h-[56px] w-full items-center justify-center rounded-2xl bg-brand text-xl font-semibold text-white shadow-[0_6px_14px_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark"
+          className="mt-auto flex h-[3.5rem] w-full items-center justify-center rounded-2xl bg-brand text-xl font-semibold text-white shadow-[0_0.375rem_0.875rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark"
         >
           Daftar
         </Link>

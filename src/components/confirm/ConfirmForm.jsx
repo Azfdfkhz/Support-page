@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ const MAX_NAME = 80;
 const MAX_PRAYER = 500;
 
 const underlineInput =
-  "mt-0.5 w-full border-0 border-b border-brand bg-transparent pb-1 text-[13px] font-medium text-slate-700 outline-none aria-[invalid=true]:border-red-500";
+  "mt-0.5 w-full border-0 border-b border-brand bg-transparent pb-1 text-[0.8125rem] font-medium text-slate-700 outline-none aria-[invalid=true]:border-red-500";
 
 export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" }) {
   const router = useRouter();
@@ -27,7 +27,9 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
   const [prayer, setPrayer] = useState(initialPrayer);
   const [wantsUpdates, setWantsUpdates] = useState(true);
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // creating the donation (API call)
+  const [isNavigating, startTransition] = useTransition(); // moving on to the success page
+  const isBusy = isSubmitting || isNavigating;
 
   function setError(field, message) {
     setErrors((prev) => ({ ...prev, [field]: message }));
@@ -35,7 +37,7 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isBusy) return;
 
     const next = {};
     if (!name.trim()) next.name = "Nama wajib diisi.";
@@ -57,7 +59,12 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
         paymentMethod: "bca-transfer",
       });
       const query = new URLSearchParams({ ref: reference, creator: creatorSlug, amount: String(amount) });
-      router.push(`${SUCCESS_PATH}?${query.toString()}`);
+      // Hand over to the navigation state in the same update, so the button never flickers and is
+      // not left on "Memproses..." if the user comes back to this page.
+      setIsSubmitting(false);
+      startTransition(() => {
+        router.push(`${SUCCESS_PATH}?${query.toString()}`);
+      });
     } catch (error) {
       setError(
         "submit",
@@ -83,14 +90,14 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
 
       <section aria-label="Nominal donasi" className="flex items-center justify-between overflow-hidden rounded-2xl border border-line bg-brand-soft/70 py-4 pl-4 pr-3">
         <div className="min-w-0">
-          <p className="text-[13px] font-semibold text-brand">Kamu akan berdonasi sebesar:</p>
-          <p className="mt-2 truncate text-[30px] font-bold leading-none text-brand">{formatCurrency(amount, { spaced: true })}</p>
+          <p className="text-[0.8125rem] font-semibold text-brand">Kamu akan berdonasi sebesar:</p>
+          <p className="mt-2 truncate text-[1.875rem] font-bold leading-none text-brand">{formatCurrency(amount, { spaced: true })}</p>
         </div>
-        <Image src="/donation_icon.png" alt="" width={60} height={74} className="shrink-0" />
+        <Image src="/donation_icon.png" alt="" width={60} height={74} className="h-[4.625rem] w-[3.75rem] shrink-0" />
       </section>
 
       <section aria-label="Metode pembayaran" className="mt-3 flex items-center gap-3 rounded-2xl border border-line bg-white p-3.5">
-        <span className="grid h-10 w-[50px] shrink-0 place-items-center rounded-lg border border-line text-sm font-bold text-brand">BCA</span>
+        <span className="grid h-10 w-[3.125rem] shrink-0 place-items-center rounded-lg border border-line text-sm font-bold text-brand">BCA</span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-ink">Bank Transfer</p>
           <p className="text-xs font-medium text-[#059669]">Terverifikasi Manual 1x24 Jam</p>
@@ -102,15 +109,15 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
       </section>
 
       {LOGIN_URL ? (
-        <p className="mt-3 text-center text-[13px] text-slate-500">
+        <p className="mt-3 text-center text-[0.8125rem] text-slate-500">
           <a href={LOGIN_URL} className="mr-1 rounded-md bg-brand-soft px-2.5 py-1 font-semibold text-brand">Masuk</a>
           atau lengkapi data dibawah ini
         </p>
       ) : (
-        <p className="mt-3 text-center text-[13px] text-slate-500">Lengkapi data dibawah ini</p>
+        <p className="mt-3 text-center text-[0.8125rem] text-slate-500">Lengkapi data dibawah ini</p>
       )}
 
-      <section aria-label="Data donatur" className="mt-3 rounded-2xl border border-line bg-white px-4 py-4 shadow-[0_2px_10px_rgba(9,31,64,0.05)]">
+      <section aria-label="Data donatur" className="mt-3 rounded-2xl border border-line bg-white px-4 py-4 shadow-[0_0.125rem_0.625rem_rgba(9,31,64,0.05)]">
         <div>
           <label htmlFor="donor-name" className="block text-xs font-medium text-brand">Nama</label>
           <input
@@ -156,8 +163,8 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
 
         <div className="mt-3.5 flex items-center justify-between gap-3">
           <label htmlFor="hide-name" className="min-w-0 flex-1">
-            <span className="block text-[13px] font-semibold text-slate-600">Sembunyikan Nama Saya</span>
-            <span className="block text-[11px] leading-snug text-muted">Ditampilkan sebagai “Teman Berbagi” di halaman Campaign</span>
+            <span className="block text-[0.8125rem] font-semibold text-slate-600">Sembunyikan Nama Saya</span>
+            <span className="block text-[0.6875rem] leading-snug text-muted">Ditampilkan sebagai “Teman Berbagi” di halaman Campaign</span>
           </label>
           <input
             id="hide-name"
@@ -169,8 +176,8 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
         </div>
       </section>
 
-      <section aria-label="Doa dan harapan" className="mt-3 rounded-2xl border border-line bg-white p-4 shadow-[0_2px_10px_rgba(9,31,64,0.05)]">
-        <label htmlFor="prayer" className="block text-[13px] font-semibold text-ink">
+      <section aria-label="Doa dan harapan" className="mt-3 rounded-2xl border border-line bg-white p-4 shadow-[0_0.125rem_0.625rem_rgba(9,31,64,0.05)]">
+        <label htmlFor="prayer" className="block text-[0.8125rem] font-semibold text-ink">
           Tulis Doa atau Harapan kamu <span className="font-normal text-muted">(Opsional)</span>
         </label>
         <textarea
@@ -181,25 +188,25 @@ export default function ConfirmForm({ creatorSlug, amount, initialPrayer = "" })
           value={prayer}
           onChange={(event) => setPrayer(event.target.value)}
           placeholder="Kamu bisa doakan penerima manfaat, keluarga, kerabat, atau untuk diri sendiri di sini. Doa baikmu akan menguatkan mereka..."
-          className="mt-2.5 block w-full resize-none rounded-xl border border-line bg-brand-soft/40 px-3.5 py-2.5 text-[13px] text-ink outline-none placeholder:text-muted/70 focus:border-brand"
+          className="mt-2.5 block w-full resize-none rounded-xl border border-line bg-brand-soft/40 px-3.5 py-2.5 text-[0.8125rem] text-ink outline-none placeholder:text-muted/70 focus:border-brand"
         />
-        <p className="mt-2.5 flex items-start gap-2.5 rounded-xl border border-[#a9cdf0] bg-brand-soft/60 px-3 py-2.5 text-[13px] text-brand">
+        <p className="mt-2.5 flex items-start gap-2.5 rounded-xl border border-[#a9cdf0] bg-brand-soft/60 px-3 py-2.5 text-[0.8125rem] text-brand">
           <HeartIcon className="mt-0.5 size-3.5 shrink-0 text-red-600" />
           Doa yang tulus membawa keberkahan dan ketenangan hati.
         </p>
       </section>
 
       <div className="mt-5 flex items-center justify-between gap-4 px-1">
-        <p id="updates-label" className="text-[13px] font-semibold text-slate-600">Bersedia dihubungi tentang program kebaikan lainnya.</p>
+        <p id="updates-label" className="text-[0.8125rem] font-semibold text-slate-600">Bersedia dihubungi tentang program kebaikan lainnya.</p>
         <LoveSwitch checked={wantsUpdates} onChange={setWantsUpdates} labelledBy="updates-label" />
       </div>
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="mx-auto mt-6 h-[52px] w-[70%] rounded-full bg-brand text-base font-semibold text-white shadow-[0_10px_20px_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
+        disabled={isBusy}
+        className="mx-auto mt-6 h-[3.25rem] w-[70%] rounded-full bg-brand text-base font-semibold text-white shadow-[0_0.625rem_1.25rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
       >
-        {isSubmitting ? "Memproses..." : "Lanjut"}
+        {isBusy ? "Memproses..." : "Lanjut"}
       </button>
       <p role="alert" className="mt-2 min-h-4 text-center text-xs text-red-600">{errors.submit}</p>
     </form>

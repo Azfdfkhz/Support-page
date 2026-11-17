@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import TextAreaField from "@/components/ui/TextAreaField";
 import { confirmPath } from "@/constants/routes";
@@ -15,7 +15,9 @@ export default function SupportForm({ creatorName, creatorSlug }) {
   const [customAmount, setCustomAmount] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // True only while the navigation to the confirm page is in flight. It ends by itself when that
+  // navigation finishes, so coming back to this page never shows a stuck "Memproses...".
+  const [isPending, startTransition] = useTransition();
 
   const amount = isCustom ? Number(customAmount) : presetAmount;
 
@@ -44,20 +46,20 @@ export default function SupportForm({ creatorName, creatorSlug }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isPending) return;
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    // Keep the button in its loading state while navigating to the confirm page.
-    setIsSubmitting(true);
-    router.push(confirmPath({ slug: creatorSlug, amount, message: message.trim() }));
+    startTransition(() => {
+      router.push(confirmPath({ slug: creatorSlug, amount, message: message.trim() }));
+    });
   }
 
   return (
     <section
       aria-labelledby="support-title"
-      className="mx-3 mt-4 rounded-2xl border border-line bg-surface p-4 shadow-[0_2px_10px_rgba(23,37,74,0.05)]"
+      className="mx-3 mt-4 rounded-2xl border border-line bg-surface p-4 shadow-[0_0.125rem_0.625rem_rgba(23,37,74,0.05)]"
     >
       <h2 id="support-title" className="mb-3 text-lg font-bold text-ink">
         Support {creatorName}
@@ -89,10 +91,10 @@ export default function SupportForm({ creatorName, creatorSlug }) {
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="mt-4 h-[52px] w-full rounded-full bg-brand text-base font-bold text-white shadow-[0_6px_14px_rgba(47,103,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
+          disabled={isPending}
+          className="mt-4 h-[3.25rem] w-full rounded-full bg-brand text-base font-bold text-white shadow-[0_0.375rem_0.875rem_rgba(47,103,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
         >
-          {isSubmitting ? "Memproses..." : "Kirim Support"}
+          {isPending ? "Memproses..." : "Kirim Support"}
         </button>
 
       </form>

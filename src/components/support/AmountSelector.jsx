@@ -1,7 +1,7 @@
 import { formatCurrency, formatThousands } from "@/utils/formatCurrency";
 
 const baseButton =
-  "h-10 rounded-[10px] border text-sm font-semibold transition-colors";
+  "h-10 rounded-[0.625rem] border text-sm font-semibold transition-colors";
 const idleButton = "border-line bg-white text-brand hover:bg-brand-soft";
 const activeButton = "border-brand bg-brand text-white";
 

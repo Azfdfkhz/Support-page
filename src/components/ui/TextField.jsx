@@ -1,7 +1,7 @@
 export default function TextField({ id, label, value, onChange, type = "text", autoComplete, error }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-[13px] font-medium text-brand">
+      <label htmlFor={id} className="block text-[0.8125rem] font-medium text-brand">
         {label}
       </label>
       <input

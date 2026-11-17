@@ -1,5 +1,5 @@
-// Placeholder creator data. Replace with API data later.
-// Empty image URLs render a neutral placeholder.
+// Placeholder creator data, used only when USE_MOCKS is on (see lib/config.js).
+// Empty image URLs render a neutral placeholder. Socials are usernames, like the register form sends them.
 export const mockCreator = {
   name: "Naya",
   role: "Content Creator",
@@ -8,7 +8,9 @@ export const mockCreator = {
   coverImageUrl: "",
   avatarImageUrl: "",
   socials: {
-    instagram: "https://instagram.com/",
-    tiktok: "https://tiktok.com/",
+    instagram: "naya",
+    tiktok: "naya",
+    facebook: "naya",
   },
+  campaignCount: 4,
 };

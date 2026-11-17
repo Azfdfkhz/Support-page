@@ -17,6 +17,7 @@
   --color-surface: #fbfcff;
   --color-accent: #1a73eb;
   --color-avatar: #2858a4;
+  --color-skeleton: #e4ebf5;
   --font-sans: var(--font-poppins);
 }
 
@@ -43,16 +44,58 @@ textarea:focus-visible {
   box-shadow: none;
 }
 
-/* Page column: designed at 414px, shown at 511px on desktop (511 / 414 = 1.2343). */
-.app-shell {
-  width: 100%;
-  max-width: 414px;
-  margin-inline: auto;
-  min-height: 100vh;
+/*
+ * Page column: designed at 414px, shown at 511px on screens >= 768px (511 / 414 = 1.2343).
+ *
+ * The desktop scale-up is done by raising the root font-size, because every size in the app is in rem.
+ * This replaces the non-standard CSS `zoom` property, which different browsers apply differently
+ * (that is why other browsers looked "too zoomed in"). rem scaling renders the same everywhere and
+ * also respects the browser's own font-size setting.
+ *
+ * `html:has(.app-shell)` keeps this scoped to the support-page routes, so it cannot change the root
+ * font-size of other pages when this app is merged into the main Sharing Happiness website.
+ */
+html:has(.app-shell) {
+  font-size: 100%;
 }
 @media (min-width: 768px) {
-  .app-shell {
-    zoom: 1.2343;
-    min-height: calc(100vh / 1.2343);
+  html:has(.app-shell) {
+    font-size: 123.43%;
+  }
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 25.875rem; /* 414px */
+  margin-inline: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Share dialog: fade/scale in, and stop the page behind from scrolling while it is open. */
+body:has(.share-dialog[open]) {
+  overflow: hidden;
+}
+.share-dialog[open] {
+  animation: share-dialog-in 180ms ease-out;
+}
+.share-dialog[open]::backdrop {
+  animation: share-backdrop-in 180ms ease-out;
+}
+@keyframes share-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+}
+@keyframes share-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .share-dialog[open],
+  .share-dialog[open]::backdrop {
+    animation: none;
   }
 }

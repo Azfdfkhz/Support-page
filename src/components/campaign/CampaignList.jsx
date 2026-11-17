@@ -5,7 +5,7 @@ export default function CampaignList({ campaigns }) {
 
   return (
     <section aria-labelledby="campaign-title" className="mt-6 px-4 pb-10">
-      <h2 id="campaign-title" className="text-center text-[17px] font-bold text-ink">
+      <h2 id="campaign-title" className="text-center text-[1.0625rem] font-bold text-ink">
         Campaign
       </h2>
       <ul className="mt-2 divide-y divide-line">

@@ -31,27 +31,27 @@ async function SuccessContent({ searchParams }) {
 
   return (
     <>
-      <section className="flex min-h-[250px] items-start justify-between overflow-hidden pl-5">
+      <section className="flex min-h-[15.625rem] items-start justify-between overflow-hidden pl-5">
         <div className="pt-12">
-          <h1 className="text-[22px] font-semibold leading-tight text-ink">
+          <h1 className="text-[1.375rem] font-semibold leading-tight text-ink">
             Pembayaran donasi
             <br />
             berhasil
           </h1>
-          <p className="mt-2 text-[13px] leading-relaxed text-muted">
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-muted">
             Terima kasih, donasi
             <br />
             Anda telah kami terima.
           </p>
         </div>
-        <div className="relative mt-16 h-[100px] w-[196px] shrink-0">
+        <div className="relative mt-16 h-[6.25rem] w-[12.25rem] shrink-0">
           <Image src="/success.png" alt="" fill priority sizes="196px" className="object-contain object-right-bottom" />
         </div>
       </section>
 
       <section aria-labelledby="detail-title" className="bg-[#F5F7FA] px-4 py-4">
         <h2 id="detail-title" className="text-sm font-semibold text-ink">Detail transaksi</h2>
-        <dl className="mt-3 space-y-3 text-[13px]">
+        <dl className="mt-3 space-y-3 text-[0.8125rem]">
           <div className="flex items-center justify-between gap-3">
             <dt className="text-muted">Nominal</dt>
             <dd className="text-2xl font-semibold leading-none text-ink">{formatCurrency(donation.amount, { spaced: true })}</dd>
@@ -84,8 +84,8 @@ async function SuccessContent({ searchParams }) {
             </svg>
             Terima kasih, Teman Berbagi!
           </h2>
-          {campaign.thanksText ? <p className="mt-2.5 text-[13px] leading-relaxed text-muted">{campaign.thanksText}</p> : null}
-          <p className="mt-2.5 text-[13px] leading-relaxed text-muted">
+          {campaign.thanksText ? <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-muted">{campaign.thanksText}</p> : null}
+          <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-muted">
             Simpan nomor donasi Anda. Jika membutuhkan bantuan, silakan hubungi CS.
           </p>
         </section>
@@ -96,28 +96,28 @@ async function SuccessContent({ searchParams }) {
               href={CS_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#3D9A52] bg-white text-[15px] font-semibold text-[#3D9A52]"
+              className="flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#3D9A52] bg-white text-[0.9375rem] font-semibold text-[#3D9A52]"
             >
               <WhatsAppIcon className="size-5" />
               Kontak CS
             </a>
           ) : null}
-          <Link href={creatorPath(creator)} className="flex h-12 items-center justify-center rounded-xl bg-brand text-[15px] font-semibold text-white">
+          <Link href={creatorPath(creator)} className="flex h-12 items-center justify-center rounded-xl bg-brand text-[0.9375rem] font-semibold text-white">
             Halaman Campaign
           </Link>
         </div>
 
         <article className="mt-4 flex gap-3">
-          <div className="relative size-[88px] shrink-0 overflow-hidden rounded-md bg-slate-200">
+          <div className="relative size-[5.5rem] shrink-0 overflow-hidden rounded-md bg-slate-200">
             {campaign.thumbnailUrl ? <Image src={campaign.thumbnailUrl} alt="" fill unoptimized sizes="88px" className="object-cover" /> : null}
-            <Image src="/play.png" alt="" width={34} height={34} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <Image src="/play.png" alt="" width={34} height={34} className="absolute left-1/2 size-[2.125rem] top-1/2 -translate-x-1/2 -translate-y-1/2" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
               <span className="truncate">{campaign.organizer}</span>
               {campaign.isOrganizerVerified ? <VerifiedIcon className="size-3.5 shrink-0 text-[#059669]" /> : null}
             </p>
-            <h3 className="mt-1 text-[15px] leading-snug text-ink">{campaign.title}</h3>
+            <h3 className="mt-1 text-[0.9375rem] leading-snug text-ink">{campaign.title}</h3>
           </div>
         </article>
 

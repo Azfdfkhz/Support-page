@@ -1,6 +1,9 @@
 # Support Page (Hepi.in)
 
-Next.js 16 + Tailwind 4. Mobile-first, content column fixed at max 414px (centered on desktop).
+Next.js 16 + Tailwind 4. Mobile-first: designed at 414px, shown at 511px on desktop (centered).
+The desktop scale-up is done with the root `font-size` (everything is in `rem`), scoped with
+`html:has(.app-shell)` in `globals.css`. Do not use CSS `zoom` or hard-coded `px` sizes: they render
+differently across browsers.
 
 ## Flow
 
@@ -34,14 +37,20 @@ Error bodies may be `{ "message": "...", "code": "..." }`.
 
 | Call | Where | Expected |
 | --- | --- | --- |
-| `GET /me` | `services/accountService.js` (server, session cookie forwarded) | `200 { name, avatarUrl }`, `401` when logged out |
-| `POST /support-pages` | `services/registerService.js` (browser, `credentials: include`, multipart: `slug, bio, instagram, tiktok, facebook, photo`) | `201 { slug }`, `409` / `code: SLUG_TAKEN`, `422 { message }` |
-| `GET /creators/{slug}` | `services/creatorService.js` | `200 { name, role, bio, isVerified, coverImageUrl, avatarImageUrl, socials }`, `404` |
+| `GET /me` | `services/accountService.js` (server, session cookie forwarded) | `200 { name, username?, avatarUrl }`, `401` when logged out. Name and photo are shown read-only on `/daftar`; `username` is the default page link |
+| `POST /support-pages` | `services/registerService.js` (browser, `credentials: include`, multipart: `slug, bio, instagram, tiktok, facebook, photo`) | `201 { slug }`, `409` / `code: SLUG_TAKEN`, `422 { message }`. Name and avatar are NOT sent: the backend copies them from the logged-in account. `instagram/tiktok/facebook` are usernames without `@` |
+| `GET /creators/{slug}` | `services/creatorService.js` | `200 { name, role, bio, isVerified, coverImageUrl, avatarImageUrl, socials: { instagram, tiktok, facebook }, campaignCount? }`, `404`. `coverImageUrl` must be set for the page created in `/daftar`. `socials` values may be usernames or profile URLs; only https links to the matching site are rendered. `campaignCount: 0` hides the Campaign section without requesting the list |
 | `GET /creators/{slug}/campaigns` | `services/creatorService.js` | `200 [{ id, title, imageUrl, daysLeft, collectedAmount, targetAmount }]` |
 | `POST /donations` | `services/donationService.js` (JSON, `credentials: include`) | `201 { reference }`, `422 { message }` |
 | `GET /donations/{reference}` | `services/donationService.js` (server) | `200 { reference, amount, paymentLabel, status, campaign }`, `404` |
 
-If your API differs, adjust only the files in `src/services/`.
+If your API differs, adjust only the files in `src/services/`. Image URLs must be https (or site-relative).
+
+## Demo mode (no API)
+
+With mocks on, the page created in `/daftar` is kept in the browser (`localStorage`, see
+`src/lib/mockProfileStore.js`) so `/{slug}` shows the entered cover photo, bio and socials, and a new page
+has no campaigns. This code never runs when `NEXT_PUBLIC_API_URL` is set.
 
 **Security note:** the amount in the `/confirm` URL is only a UI convenience. The backend must validate
 the amount (and min/max in `src/constants/supportAmounts.js`) when creating the donation, and the success
@@ -54,6 +63,8 @@ avatar `#2858A4`, verified `#059669`, love `#EF3554`.
 
 ## Production checklist
 
+- [ ] Make the backend resize/compress uploaded cover photos (the app shows API images as-is, up to 5 MB)
+- [ ] Make `POST /donations` idempotent: going Back from the success page shows the confirm form again
 - [ ] Set the env vars above on the host
 - [ ] Confirm the API contract table with the backend
 - [ ] Replace the image placeholders (campaign thumbnails, cover) with real URLs

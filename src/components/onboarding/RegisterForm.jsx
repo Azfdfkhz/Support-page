@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import AccountAvatar from "./AccountAvatar";
 import ProgressLine from "./ProgressLine";
@@ -19,9 +19,9 @@ function defaultSlug(account) {
   return sanitizeSlugInput(String(account.username || account.name || "").toLowerCase());
 }
 
-const labelClass = "block text-[13px] font-semibold text-ink";
+const labelClass = "block text-[0.8125rem] font-semibold text-ink";
 const inputClass =
-  "mt-1.5 h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[13px] text-ink placeholder:text-muted outline-none transition-colors focus:border-accent aria-[invalid=true]:border-red-500";
+  "mt-1.5 h-11 w-full rounded-xl border border-line bg-white px-3.5 text-[0.8125rem] text-ink placeholder:text-muted outline-none transition-colors focus:border-accent aria-[invalid=true]:border-red-500";
 
 function FieldError({ id, message }) {
   return message ? (
@@ -60,24 +60,23 @@ function SocialField({ id, label, value, error, onChange }) {
 export default function RegisterForm({ account }) {
   const router = useRouter();
   const fileInput = useRef(null);
-  const [photo, setPhoto] = useState(null);
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photo, setPhoto] = useState(null); // { file, url } where url is the local preview
+  const photoRef = useRef(null);
   const [bio, setBio] = useState("");
   const [social, setSocial] = useState({ instagram: "", tiktok: "", facebook: "" });
   const [slug, setSlug] = useState(() => defaultSlug(account));
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // creating the page (API call)
+  const [isNavigating, startTransition] = useTransition(); // moving on to the ready page
+  const isBusy = isSubmitting || isNavigating;
 
-  // Preview URL for the chosen cover photo; revoked on change/unmount.
-  useEffect(() => {
-    if (!photo) {
-      setPhotoUrl("");
-      return undefined;
-    }
-    const url = URL.createObjectURL(photo);
-    setPhotoUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [photo]);
+  // The preview URL is created when a photo is chosen; release the last one when leaving the page.
+  useEffect(
+    () => () => {
+      if (photoRef.current) URL.revokeObjectURL(photoRef.current.url);
+    },
+    [],
+  );
 
   function setError(field, message) {
     setErrors((prev) => ({ ...prev, [field]: message }));
@@ -93,7 +92,9 @@ export default function RegisterForm({ account }) {
       setError("photo", "Ukuran foto maksimal 5 MB.");
     } else {
       setError("photo", "");
-      setPhoto(file);
+      if (photoRef.current) URL.revokeObjectURL(photoRef.current.url);
+      photoRef.current = { file, url: URL.createObjectURL(file) };
+      setPhoto(photoRef.current);
     }
   }
 
@@ -104,7 +105,7 @@ export default function RegisterForm({ account }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isBusy) return;
 
     const next = {};
     const handles = {};
@@ -129,8 +130,12 @@ export default function RegisterForm({ account }) {
 
     setIsSubmitting(true);
     try {
-      const result = await registerSupportPage({ photo, bio: bio.trim(), ...handles, slug: slug.trim() });
-      router.push(`${READY_PATH}?slug=${encodeURIComponent(result.slug)}`);
+      const result = await registerSupportPage({ photo: photo.file, bio: bio.trim(), ...handles, slug: slug.trim(), account });
+      // Hand over to the navigation state in the same update (see SupportForm for why).
+      setIsSubmitting(false);
+      startTransition(() => {
+        router.push(`${READY_PATH}?slug=${encodeURIComponent(result.slug)}`);
+      });
     } catch (error) {
       if (error instanceof ApiError && (error.status === 409 || error.code === "SLUG_TAKEN")) {
         setError("slug", "Link ini sudah dipakai. Coba yang lain.");
@@ -147,13 +152,13 @@ export default function RegisterForm({ account }) {
     <form onSubmit={handleSubmit} noValidate className="flex flex-1 flex-col px-5 pb-8 pt-5">
       <ProgressLine progress={0.54} label="Langkah 1 dari 2" />
 
-      <h1 className="mt-6 text-[22px] font-bold leading-tight text-ink">Daftar Support Page</h1>
+      <h1 className="mt-6 text-[1.375rem] font-bold leading-tight text-ink">Daftar Support Page</h1>
 
       <div className="mt-4 flex items-center gap-3">
         <AccountAvatar name={account.name} avatarUrl={account.avatarUrl} size={56} />
         <div className="min-w-0">
           <p className="truncate text-xl font-semibold leading-tight text-ink">{account.name}</p>
-          <p className="text-[11px] leading-snug text-muted">Menggunakan nama dan foto profil di akun Sharing Happiness</p>
+          <p className="text-[0.6875rem] leading-snug text-muted">Menggunakan nama dan foto profil di akun Sharing Happiness</p>
         </div>
       </div>
 
@@ -163,17 +168,18 @@ export default function RegisterForm({ account }) {
         <button
           type="button"
           onClick={() => fileInput.current?.click()}
-          aria-invalid={Boolean(errors.photo)}
-          className="relative mt-1.5 flex h-[100px] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#b9dcf5] bg-brand-soft/60 text-center aria-[invalid=true]:border-red-500"
+          aria-describedby={errors.photo ? "photo-error" : undefined}
+          data-invalid={Boolean(errors.photo)}
+          className="relative mt-1.5 flex h-[6.25rem] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#b9dcf5] bg-brand-soft/60 text-center data-[invalid=true]:border-red-500"
         >
-          {photoUrl ? (
+          {photo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={photoUrl} alt="Pratinjau foto sampul" className="absolute inset-0 size-full object-cover" />
+            <img src={photo.url} alt="Pratinjau foto sampul" className="absolute inset-0 size-full object-cover" />
           ) : (
             <>
               <span aria-hidden="true" className="text-2xl font-light leading-none text-accent">+</span>
-              <span className="mt-1.5 text-[13px] font-semibold text-ink">Unggah Foto Sampul</span>
-              <span className="mt-0.5 text-[11px] text-muted">JPG atau PNG · maks. 5 MB</span>
+              <span className="mt-1.5 text-[0.8125rem] font-semibold text-ink">Unggah Foto Sampul</span>
+              <span className="mt-0.5 text-[0.6875rem] text-muted">JPG atau PNG · maks. 5 MB</span>
             </>
           )}
         </button>
@@ -193,9 +199,9 @@ export default function RegisterForm({ account }) {
             aria-invalid={Boolean(errors.bio)}
             aria-describedby={errors.bio ? "bio-error" : undefined}
             placeholder="Tuliskan hal yang ingin orang tahu tentangmu..."
-            className="block w-full resize-none rounded-xl border border-line bg-white px-3.5 pb-7 pt-3 text-[13px] text-ink outline-none placeholder:text-muted focus:border-accent aria-[invalid=true]:border-red-500"
+            className="block w-full resize-none rounded-xl border border-line bg-white px-3.5 pb-7 pt-3 text-[0.8125rem] text-ink outline-none placeholder:text-muted focus:border-accent aria-[invalid=true]:border-red-500"
           />
-          <span className="pointer-events-none absolute bottom-2.5 right-3.5 text-[11px] text-muted">{bio.length} / {MAX_BIO}</span>
+          <span className="pointer-events-none absolute bottom-2.5 right-3.5 text-[0.6875rem] text-muted">{bio.length} / {MAX_BIO}</span>
         </div>
         <FieldError id="bio-error" message={errors.bio} />
       </div>
@@ -209,7 +215,7 @@ export default function RegisterForm({ account }) {
       <div className="mt-4">
         <label htmlFor="slug" className={labelClass}>Link Support Page <span className="text-red-600" aria-hidden="true">*</span></label>
         <div className="mt-1.5 flex h-11 overflow-hidden rounded-xl border border-line bg-white focus-within:border-accent has-[[aria-invalid=true]]:border-red-500">
-          <span className="grid shrink-0 place-items-center bg-brand-soft px-4 text-[13px] font-medium text-ink">{SHORT_DOMAIN}/</span>
+          <span className="grid shrink-0 place-items-center bg-brand-soft px-4 text-[0.8125rem] font-medium text-ink">{SHORT_DOMAIN}/</span>
           <input
             id="slug"
             name="slug"
@@ -221,7 +227,7 @@ export default function RegisterForm({ account }) {
             onChange={(event) => { setSlug(sanitizeSlugInput(event.target.value)); setError("slug", ""); }}
             aria-invalid={Boolean(errors.slug)}
             aria-describedby={errors.slug ? "slug-error" : undefined}
-            className="min-w-0 flex-1 bg-transparent px-3.5 text-[13px] text-ink outline-none"
+            className="min-w-0 flex-1 bg-transparent px-3.5 text-[0.8125rem] text-ink outline-none"
           />
         </div>
         <FieldError id="slug-error" message={errors.slug} />
@@ -229,10 +235,10 @@ export default function RegisterForm({ account }) {
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="mt-6 h-[52px] w-full rounded-xl bg-brand text-base font-semibold text-white shadow-[0_6px_14px_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
+        disabled={isBusy}
+        className="mt-6 h-[3.25rem] w-full rounded-xl bg-brand text-base font-semibold text-white shadow-[0_0.375rem_0.875rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
       >
-        {isSubmitting ? "Membuat..." : "Buat Support Page"}
+        {isBusy ? "Membuat..." : "Buat Support Page"}
       </button>
       <p role="alert" className="mt-2 min-h-4 text-center text-xs text-red-600">{errors.submit}</p>
     </form>
