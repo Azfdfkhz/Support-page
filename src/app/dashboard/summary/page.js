@@ -20,7 +20,7 @@ export default async function DashboardSummaryPage() {
   const displayUrl = slug ? `${DASHBOARD_DOMAIN}/${slug}` : DASHBOARD_DOMAIN;
 
   return (
-    <div className="mx-auto w-full max-w-[60rem] md:mx-0">
+    <div className="mx-auto w-full max-w-auto md:mx-0">
       <h1 className="text-[1.75rem] font-bold leading-tight text-ink md:text-[2rem]">
         Hai, {account.name}
         <span aria-hidden="true" className="md:hidden"> 👋</span>

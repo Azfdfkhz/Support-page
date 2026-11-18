@@ -197,7 +197,6 @@ export default function PageSettingsForm({ account, slug, initial }) {
               className="relative mt-2 flex h-[11.5rem] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#b9dcf5] bg-[#F3F9FF] text-center disabled:cursor-default data-[invalid=true]:border-red-500 md:h-[14.5rem]"
             >
               {coverUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src={coverUrl} alt="Pratinjau foto sampul" className="absolute inset-0 size-full object-cover" />
               ) : (
                 <>
@@ -278,7 +277,7 @@ export default function PageSettingsForm({ account, slug, initial }) {
             className="flex h-12 items-center gap-3 rounded-xl bg-brand px-7 text-base font-semibold text-white shadow-[0_0.5rem_1.25rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark md:h-10 md:px-6 md:text-sm md:shadow-none"
           >
             <PencilIcon className="size-5 md:hidden" />
-            Ubah<span className="hidden md:inline"> halaman</span>
+            <span className="hidden md:inline">ubah halaman</span>
           </button>
         )}
       </section>
