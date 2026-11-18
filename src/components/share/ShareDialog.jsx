@@ -78,7 +78,7 @@ export default function ShareDialog({ open, copied, url, title, onClose, onCopie
           </h2>
           <p id={descriptionId} className="mt-1.5 text-[0.8125rem] leading-relaxed text-muted">
             {copied
-              ? "Tempel di chat, story, atau bio kamu untuk langsung membagikannya."
+              ? "kamu dapat langsung membagikannya."
               : "Salin link di bawah ini, lalu kirim ke teman dan keluargamu."}
           </p>
 
@@ -111,15 +111,6 @@ export default function ShareDialog({ open, copied, url, title, onClose, onCopie
                 Bagikan ke aplikasi lain
               </button>
             ) : null}
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-[#3D9A52] bg-white text-[0.9375rem] font-semibold text-[#3D9A52]"
-            >
-              <WhatsAppIcon className="size-5" />
-              Bagikan ke WhatsApp
-            </a>
             <button type="button" onClick={onClose} className="h-10 text-[0.8125rem] font-semibold text-muted">
               Tutup
             </button>

@@ -11,11 +11,8 @@ export default function NotFound() {
         <p className="text-5xl font-bold text-accent">404</p>
         <h1 className="mt-3 text-xl font-bold text-ink">Halaman tidak ditemukan</h1>
         <p className="mt-2 text-[0.8125rem] leading-relaxed text-muted">
-          Link yang kamu buka tidak ada.
+          Page yang kamu buka tidak ada.
         </p>
-        <Link href={INTRO_PATH} className="mt-6 flex h-12 w-full items-center justify-center rounded-xl bg-brand text-[0.9375rem] font-semibold text-white">
-          Buat Support Page
-        </Link>
       </div>
     </Shell>
   );
