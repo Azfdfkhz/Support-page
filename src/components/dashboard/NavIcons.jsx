@@ -16,7 +16,7 @@ export function SupportIcon({ className = "size-6" }) {
 }
 
 export function PageIcon({ className = "size-6" }) {
-  return <MaskIcon src="/images/page.png" className={className} />;
+  return <MaskIcon src="/images/page.svg" className={className} />;
 }
 
 export function BackArrowIcon({ className = "size-6" }) {
