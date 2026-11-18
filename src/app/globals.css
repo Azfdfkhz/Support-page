@@ -18,6 +18,9 @@
   --color-accent: #1a73eb;
   --color-avatar: #2858a4;
   --color-skeleton: #e4ebf5;
+  --color-nav-active: #2e68b2;
+  --color-nav-idle: #686c71;
+  --color-dash-bg: #f6f8fa;
   --font-sans: var(--font-poppins);
 }
 

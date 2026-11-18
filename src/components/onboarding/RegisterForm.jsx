@@ -7,17 +7,13 @@ import ProgressLine from "./ProgressLine";
 import { READY_PATH } from "@/constants/routes";
 import { SHORT_DOMAIN } from "@/lib/config";
 import { ApiError } from "@/lib/api";
+import { defaultSlug } from "@/lib/slug";
 import { normalizeHandle } from "@/lib/validators";
 import { registerSupportPage } from "@/services/registerService";
 
 const MAX_BIO = 300;
 const MAX_PHOTO_BYTES = 1 * 1024 * 1024;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
-
-// Slug is derived from the account username (or name) and cannot be changed by the user.
-function defaultSlug(account) {
-  return String(account.username || account.name || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 30);
-}
 
 const labelClass = "block text-[0.8125rem] font-semibold text-ink";
 const inputClass =

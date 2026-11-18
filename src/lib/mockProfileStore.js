@@ -77,13 +77,14 @@ async function coverToDataUrl(file) {
   }
 }
 
-export async function saveMockProfile({ slug, account, bio, socials, photo }) {
+// `keepCover`: the current cover (data URL) to keep when no new photo is chosen.
+export async function saveMockProfile({ slug, account, bio, socials, photo, keepCover }) {
   const profile = {
     name: account?.name,
     avatarImageUrl: account?.avatarUrl,
     bio,
     socials,
-    coverImageUrl: await coverToDataUrl(photo),
+    coverImageUrl: (await coverToDataUrl(photo)) || (typeof keepCover === "string" && keepCover.startsWith("data:image/") ? keepCover : ""),
   };
   try {
     try {

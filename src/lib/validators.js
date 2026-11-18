@@ -5,7 +5,7 @@ export const SLUG_MAX = 30;
 
 // Slugs that would collide with app routes or common reserved paths.
 const RESERVED_SLUGS = new Set([
-  "daftar", "ready", "confirm", "success", "support", "intro", "api", "admin", "login", "masuk",
+  "daftar", "ready", "dashboard", "confirm", "success", "support", "intro", "api", "admin", "login", "masuk",
   "logout", "keluar", "static", "assets", "public", "robots.txt", "sitemap.xml", "favicon.ico",
 ]);
 

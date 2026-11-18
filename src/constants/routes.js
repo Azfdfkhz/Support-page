@@ -16,3 +16,8 @@ export function confirmPath({ slug, amount, message }) {
   if (message) query.set("message", message);
   return `${CONFIRM_PATH}?${query.toString()}`;
 }
+
+// Creator dashboard
+export const DASHBOARD_PATH = "/dashboard";
+export const DASHBOARD_SUPPORTS_PATH = "/dashboard/dukungan";
+export const DASHBOARD_PAGE_PATH = "/dashboard/halaman";

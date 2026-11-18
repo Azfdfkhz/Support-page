@@ -54,3 +54,22 @@ export function resolveSocialLinks(socials) {
   }
   return links;
 }
+
+/**
+ * The username to show in a form field. The API may store a plain username or a full profile link
+ * ("https://www.instagram.com/nadya/", "https://www.tiktok.com/@nadya"); the form edits usernames only.
+ */
+export function extractHandle(raw) {
+  const text = String(raw ?? "").trim();
+  if (!text) return "";
+  if (/^https?:\/\//i.test(text) || /^[\w.-]+\.[a-z]{2,}\//i.test(text)) {
+    try {
+      const url = new URL(/^https?:\/\//i.test(text) ? text : `https://${text}`);
+      const segment = url.pathname.split("/").filter(Boolean)[0] ?? "";
+      return normalizeHandle(decodeURIComponent(segment)).value;
+    } catch {
+      return "";
+    }
+  }
+  return normalizeHandle(text).value;
+}

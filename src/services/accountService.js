@@ -15,7 +15,8 @@ const text = (value) => (typeof value === "string" ? value.trim() : "");
  * The register form shows this name and photo as they are, so the user never has to type or upload
  * them again, and `username` (when the API has one) becomes the default page link.
  *
- * Expected API: GET /me -> 200 { name, username?, avatarUrl } | 401 when not logged in.
+ * Expected API: GET /me -> 200 { name, username?, avatarUrl, pageSlug? } | 401 when not logged in.
+ * `pageSlug` is the link of the user's support page when they already have one.
  */
 export async function getAccount() {
   if (USE_MOCKS) return mockAccount;
@@ -24,7 +25,7 @@ export async function getAccount() {
   try {
     const data = await apiFetch("/me", { headers: { Cookie: cookieHeader }, cache: "no-store" });
     const username = text(data?.username);
-    return { name: text(data?.name) || username, username, avatarUrl: safeImageUrl(data?.avatarUrl) };
+    return { name: text(data?.name) || username, username, pageSlug: text(data?.pageSlug), avatarUrl: safeImageUrl(data?.avatarUrl) };
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) redirect(LOGIN_URL || INTRO_PATH);
     throw error;
