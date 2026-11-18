@@ -36,6 +36,16 @@ export default function SupportForm({ creatorName, creatorSlug }) {
     if (value) clearError("amount");
   }
 
+  function handleCustomAmountBlur() {
+    if (!customAmount) return;
+    const value = Number(customAmount);
+    if (value < MIN_SUPPORT_AMOUNT) {
+      setErrors((prev) => ({ ...prev, amount: `Nominal minimal ${formatCurrency(MIN_SUPPORT_AMOUNT)}.` }));
+    } else if (value > MAX_SUPPORT_AMOUNT) {
+      setErrors((prev) => ({ ...prev, amount: `Nominal maksimal ${formatCurrency(MAX_SUPPORT_AMOUNT)}.` }));
+    }
+  }
+
   function validate() {
     const next = {};
     if (!amount) next.amount = "Pilih atau isi nominal support.";
@@ -74,6 +84,7 @@ export default function SupportForm({ creatorName, creatorSlug }) {
           onSelectPreset={handleSelectPreset}
           onSelectCustom={() => setIsCustom(true)}
           onCustomChange={handleCustomAmountChange}
+          onCustomBlur={handleCustomAmountBlur}
         />
         {errors.amount ? <p className="mt-1.5 text-xs text-red-600">{errors.amount}</p> : null}
 

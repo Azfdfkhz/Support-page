@@ -13,6 +13,7 @@ export default function AmountSelector({
   onSelectPreset,
   onSelectCustom,
   onCustomChange,
+  onCustomBlur,
 }) {
   return (
     <fieldset>
@@ -54,6 +55,7 @@ export default function AmountSelector({
             aria-label="Nominal support"
             value={formatThousands(customValue)}
             onChange={(event) => onCustomChange(event.target.value.replace(/\D/g, "").slice(0, 12))}
+            onBlur={onCustomBlur}
             placeholder="0"
             style={{ outline: "none", boxShadow: "none" }}
             className="h-11 w-full rounded-xl bg-transparent text-sm font-semibold text-ink outline-none"

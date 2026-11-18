@@ -9,14 +9,6 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Small fetch wrapper for the backend API (works on server and client).
- * - 15s timeout by default
- * - JSON body via `json`, multipart via `formData`
- * - throws ApiError with `status` / `code` so callers can show a precise message
- *
- * Expected error body (optional): { "message": "...", "code": "SLUG_TAKEN" }
- */
 export async function apiFetch(path, { method = "GET", json, formData, headers = {}, credentials, cache, timeoutMs = 15000 } = {}) {
   if (!API_URL) {
     throw new ApiError("API belum dikonfigurasi.", { code: "NOT_CONFIGURED" });
@@ -31,7 +23,7 @@ export async function apiFetch(path, { method = "GET", json, formData, headers =
     init.body = JSON.stringify(json);
     init.headers["Content-Type"] = "application/json";
   } else if (formData) {
-    init.body = formData; // the browser sets the multipart boundary
+    init.body = formData; 
   }
 
   try {

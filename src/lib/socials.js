@@ -7,10 +7,11 @@ export const SOCIAL_PLATFORMS = {
   instagram: { label: "Instagram", hosts: ["instagram.com"], build: (handle) => `https://www.instagram.com/${handle}` },
   tiktok: { label: "TikTok", hosts: ["tiktok.com"], build: (handle) => `https://www.tiktok.com/@${handle}` },
   facebook: { label: "Facebook", hosts: ["facebook.com", "fb.com"], build: (handle) => `https://www.facebook.com/${handle}` },
+  whatsapp: { label: "WhatsApp", hosts: ["wa.me", "api.whatsapp.com", "whatsapp.com"], build: (handle) => `https://wa.me/${handle.replace(/\D/g, "")}` },
 };
 
 // Order the icons are shown in.
-export const SOCIAL_ORDER = ["instagram", "tiktok", "facebook"];
+export const SOCIAL_ORDER = ["instagram", "tiktok", "facebook", "whatsapp"];
 
 function hostMatches(hostname, hosts) {
   const host = hostname.toLowerCase();

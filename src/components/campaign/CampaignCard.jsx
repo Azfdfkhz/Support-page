@@ -4,13 +4,13 @@ import CampaignProgress from "./CampaignProgress";
 
 /**
  * Props come from the campaign API:
- * { title, imageUrl, daysLeft, collectedAmount, targetAmount }
+ * { title, imageUrl, campaignUrl, daysLeft, collectedAmount, targetAmount }
  */
-export default function CampaignCard({ title, imageUrl, daysLeft, collectedAmount, targetAmount }) {
+export default function CampaignCard({ title, imageUrl, campaignUrl, daysLeft, collectedAmount, targetAmount }) {
   const percent = targetAmount > 0 ? (collectedAmount / targetAmount) * 100 : 0;
 
-  return (
-    <article className="flex gap-2.5 py-4">
+  const inner = (
+    <>
       <div className="relative h-[6.5rem] w-[11.375rem] shrink-0 overflow-hidden rounded-md bg-slate-200">
         <ImageWithFallback src={imageUrl} alt={title} sizes="182px" />
       </div>
@@ -33,6 +33,22 @@ export default function CampaignCard({ title, imageUrl, daysLeft, collectedAmoun
           </div>
         </dl>
       </div>
-    </article>
+    </>
   );
+
+  if (campaignUrl) {
+    return (
+      <a
+        href={campaignUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex gap-2.5 py-4 hover:opacity-80 transition-opacity"
+        aria-label={`Lihat campaign: ${title}`}
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return <article className="flex gap-2.5 py-4">{inner}</article>;
 }

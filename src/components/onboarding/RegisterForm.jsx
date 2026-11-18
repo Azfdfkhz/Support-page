@@ -7,16 +7,16 @@ import ProgressLine from "./ProgressLine";
 import { READY_PATH } from "@/constants/routes";
 import { SHORT_DOMAIN } from "@/lib/config";
 import { ApiError } from "@/lib/api";
-import { normalizeHandle, sanitizeSlugInput, validateSlug } from "@/lib/validators";
+import { normalizeHandle } from "@/lib/validators";
 import { registerSupportPage } from "@/services/registerService";
 
 const MAX_BIO = 300;
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+const MAX_PHOTO_BYTES = 1 * 1024 * 1024;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 
-// Link name follows the account username (or name) by default, lowercase, no spaces.
+// Slug is derived from the account username (or name) and cannot be changed by the user.
 function defaultSlug(account) {
-  return sanitizeSlugInput(String(account.username || account.name || "").toLowerCase());
+  return String(account.username || account.name || "").toLowerCase().replace(/[^a-z0-9._-]/g, "").slice(0, 30);
 }
 
 const labelClass = "block text-[0.8125rem] font-semibold text-ink";
@@ -89,7 +89,7 @@ export default function RegisterForm({ account }) {
     if (!ACCEPTED_TYPES.includes(file.type)) {
       setError("photo", "Format harus JPG atau PNG.");
     } else if (file.size > MAX_PHOTO_BYTES) {
-      setError("photo", "Ukuran foto maksimal 5 MB.");
+      setError("photo", "Ukuran foto maksimal 1 MB.");
     } else {
       setError("photo", "");
       if (photoRef.current) URL.revokeObjectURL(photoRef.current.url);
@@ -116,12 +116,10 @@ export default function RegisterForm({ account }) {
     }
     if (!photo) next.photo = "Foto sampul wajib diunggah.";
     if (!bio.trim()) next.bio = "Bio wajib diisi.";
-    const slugError = validateSlug(slug);
-    if (slugError) next.slug = slugError;
     setErrors(next);
     if (Object.keys(next).length > 0) {
       // Bring the first problem into view, in on-screen order.
-      const first = ["photo", "bio", "instagram", "tiktok", "facebook", "slug"].find((field) => next[field]);
+      const first = ["photo", "bio", "instagram", "tiktok", "facebook"].find((field) => next[field]);
       const target = first === "photo" ? fileInput.current?.nextElementSibling : document.getElementById(first);
       target?.scrollIntoView({ behavior: "smooth", block: "center" });
       if (first !== "photo") target?.focus({ preventScroll: true });
@@ -179,7 +177,7 @@ export default function RegisterForm({ account }) {
             <>
               <span aria-hidden="true" className="text-2xl font-light leading-none text-accent">+</span>
               <span className="mt-1.5 text-[0.8125rem] font-semibold text-ink">Unggah Foto Sampul</span>
-              <span className="mt-0.5 text-[0.6875rem] text-muted">JPG atau PNG · maks. 5 MB</span>
+              <span className="mt-0.5 text-[0.6875rem] text-muted">JPG atau PNG · maks. 1 MB</span>
             </>
           )}
         </button>
@@ -213,24 +211,17 @@ export default function RegisterForm({ account }) {
       </div>
 
       <div className="mt-4">
-        <label htmlFor="slug" className={labelClass}>Link Support Page <span className="text-red-600" aria-hidden="true">*</span></label>
-        <div className="mt-1.5 flex h-11 overflow-hidden rounded-xl border border-line bg-white focus-within:border-accent has-[[aria-invalid=true]]:border-red-500">
+        <label htmlFor="slug" className={labelClass}>Link Support Page</label>
+        <div className="mt-1.5 flex h-11 overflow-hidden rounded-xl border border-line bg-white">
           <span className="grid shrink-0 place-items-center bg-brand-soft px-4 text-[0.8125rem] font-medium text-ink">{SHORT_DOMAIN}/</span>
-          <input
+          <span
             id="slug"
-            name="slug"
-            type="text"
-            autoComplete="off"
-            autoCapitalize="none"
-            spellCheck={false}
-            value={slug}
-            onChange={(event) => { setSlug(sanitizeSlugInput(event.target.value)); setError("slug", ""); }}
-            aria-invalid={Boolean(errors.slug)}
-            aria-describedby={errors.slug ? "slug-error" : undefined}
-            className="min-w-0 flex-1 bg-transparent px-3.5 text-[0.8125rem] text-ink outline-none"
-          />
+            aria-readonly="true"
+            className="flex flex-1 items-center bg-white px-3.5 text-[0.8125rem] font-medium text-muted select-all"
+          >
+            {slug}
+          </span>
         </div>
-        <FieldError id="slug-error" message={errors.slug} />
       </div>
 
       <button

@@ -27,8 +27,26 @@ body {
   font-family: var(--font-poppins), system-ui, sans-serif;
 }
 
-/* Keyboard focus ring for buttons and links only. Form fields show focus via background. */
+/* Cursor affordance: every interactive control signals it can be clicked. */
 @layer base {
+  a[href],
+  button,
+  label[for],
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Keyboard focus ring for buttons and links. */
   a:focus-visible,
   button:focus-visible {
     outline: 2px solid var(--color-brand);
@@ -36,12 +54,14 @@ body {
   }
 }
 
+/* Form fields show focus via a visible border instead of the default outline. */
 input:focus,
 input:focus-visible,
 textarea:focus,
 textarea:focus-visible {
   outline: none;
   box-shadow: none;
+  border-color: var(--color-brand) !important;
 }
 
 /*

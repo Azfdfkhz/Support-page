@@ -1,14 +1,8 @@
-// Demo mode only (see USE_MOCKS in lib/config.js). With a real API none of this runs.
-//
-// Without a backend nothing is saved when the register form is submitted, so the new page would
-// show the placeholder creator instead of what the user just entered (cover photo, bio, socials).
-// This keeps that profile in the browser's localStorage so /{slug} can show it.
-
 import { safeImageUrl } from "./safeUrl";
 
 const STORAGE_PREFIX = "sp:mock-profile:";
 const CHANGE_EVENT = "sp:mock-profile-change";
-const COVER_MAX_WIDTH = 828; // 2x the 414px design width; keeps the stored image small.
+const COVER_MAX_WIDTH = 828;
 
 const text = (value) => (typeof value === "string" ? value.trim() : "");
 const storageKey = (slug) => `${STORAGE_PREFIX}${String(slug).toLowerCase()}`;
@@ -17,11 +11,10 @@ export function readMockProfileRaw(slug) {
   try {
     return window.localStorage.getItem(storageKey(slug));
   } catch {
-    return null; // Storage blocked (private mode, disabled cookies).
+    return null; 
   }
 }
 
-/** Turns the stored JSON into the same shape the creator API returns, or null. */
 export function parseMockProfile(raw) {
   if (!raw) return null;
   try {
@@ -61,7 +54,6 @@ function readAsDataUrl(file) {
   });
 }
 
-// Downscaled JPEG data URL of the chosen cover photo ("" if it cannot be read).
 async function coverToDataUrl(file) {
   if (!file) return "";
   try {
@@ -85,7 +77,6 @@ async function coverToDataUrl(file) {
   }
 }
 
-/** Saves the page created in the register form. Never throws; the demo flow continues either way. */
 export async function saveMockProfile({ slug, account, bio, socials, photo }) {
   const profile = {
     name: account?.name,
@@ -98,11 +89,10 @@ export async function saveMockProfile({ slug, account, bio, socials, photo }) {
     try {
       window.localStorage.setItem(storageKey(slug), JSON.stringify(profile));
     } catch {
-      // Quota exceeded: keep everything except the (large) cover image.
       window.localStorage.setItem(storageKey(slug), JSON.stringify({ ...profile, coverImageUrl: "" }));
     }
     window.dispatchEvent(new Event(CHANGE_EVENT));
   } catch {
-    // Storage unavailable: the demo page falls back to the placeholder creator.
+
   }
 }

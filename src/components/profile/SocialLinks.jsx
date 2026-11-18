@@ -1,6 +1,7 @@
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import TikTokIcon from "@/components/icons/TikTokIcon";
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 import { resolveSocialLinks } from "@/lib/socials";
 
 const linkClass = "grid size-8 place-items-center rounded-full text-white";
@@ -9,6 +10,7 @@ const PLATFORM_STYLE = {
   instagram: { Icon: InstagramIcon, background: "bg-[linear-gradient(45deg,#f9a825_0%,#e91e63_50%,#8e24aa_100%)]" },
   tiktok: { Icon: TikTokIcon, background: "bg-black" },
   facebook: { Icon: FacebookIcon, background: "bg-[#1877F2]" },
+  whatsapp: { Icon: WhatsAppIcon, background: "bg-[#25D366]" },
 };
 
 /**

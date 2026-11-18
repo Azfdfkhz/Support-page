@@ -11,9 +11,9 @@ const poppins = Poppins({
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Support Page", template: "%s | Support Page" },
+  title: { default: "SharingHappiness", template: "%s | Support Page" },
   description: "Satu halaman untuk menerima dukungan dari siapa saja.",
-  openGraph: { type: "website", siteName: "Support Page", locale: "id_ID" },
+  openGraph: { type: "website", siteName: "SharingHappines", locale: "id_ID" },
 };
 
 export const viewport = {

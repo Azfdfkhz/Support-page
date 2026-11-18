@@ -6,7 +6,7 @@ export const mockCreator = {
   bio: "Aktif dalam tim aksi kemanusiaan & tanggap darurat bencana. Bersama kita ringankan beban sesama!",
   isVerified: true,
   coverImageUrl: "",
-  avatarImageUrl: "",
+  avatarImageUrl: "/No-profil.png",
   socials: {
     instagram: "naya",
     tiktok: "naya",

@@ -110,7 +110,9 @@ async function SuccessContent({ searchParams }) {
         <article className="mt-4 flex gap-3">
           <div className="relative size-[5.5rem] shrink-0 overflow-hidden rounded-md bg-slate-200">
             {campaign.thumbnailUrl ? <Image src={campaign.thumbnailUrl} alt="" fill unoptimized sizes="88px" className="object-cover" /> : null}
-            <Image src="/play.png" alt="" width={34} height={34} className="absolute left-1/2 size-[2.125rem] top-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <div aria-hidden="true" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Image src="/play.png" alt="" width={34} height={34} className="size-[2.125rem] opacity-80" />
+            </div>
           </div>
           <div className="min-w-0 flex-1">
             <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
