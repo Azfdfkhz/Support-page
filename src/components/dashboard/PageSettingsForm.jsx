@@ -277,7 +277,7 @@ export default function PageSettingsForm({ account, slug, initial }) {
             className="flex h-12 items-center gap-3 rounded-xl bg-brand px-7 text-base font-semibold text-white shadow-[0_0.5rem_1.25rem_rgba(46,104,178,0.3)] transition-colors hover:bg-brand-dark md:h-10 md:px-6 md:text-sm md:shadow-none"
           >
             <PencilIcon className="size-5 md:hidden" />
-            <span className="hidden md:inline">ubah halaman</span>
+            Ubah<span className="hidden md:inline"> halaman</span>
           </button>
         )}
       </section>

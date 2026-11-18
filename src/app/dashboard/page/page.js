@@ -22,7 +22,7 @@ export default async function DashboardPageSettingsPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-auto md:mx-0">
+    <div className="w-full">
       <h1 className="text-[1.75rem] font-bold leading-tight text-ink md:text-[2rem]">Halaman</h1>
       <p className="mt-1 text-base text-muted">Kelola Support Page kamu.</p>
       <PageSettingsView account={account} slug={slug} serverInitial={initial} />

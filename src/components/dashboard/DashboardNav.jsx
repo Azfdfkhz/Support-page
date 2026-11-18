@@ -2,18 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DASHBOARD_PAGE_PATH, DASHBOARD_PATH, DASHBOARD_SUPPORTS_PATH } from "@/constants/routes";
+import { DASHBOARD_PAGE_PATH, DASHBOARD_SUMMARY_PATH, DASHBOARD_SUPPORTS_PATH } from "@/constants/routes";
 import { PageIcon, SummaryIcon, SupportIcon } from "./NavIcons";
 
 const ITEMS = [
-  { href: DASHBOARD_PATH, label: "Ringkasan", Icon: SummaryIcon, exact: true },
+  { href: DASHBOARD_SUMMARY_PATH, label: "Ringkasan", Icon: SummaryIcon },
   { href: DASHBOARD_SUPPORTS_PATH, label: "Dukungan", Icon: SupportIcon },
   { href: DASHBOARD_PAGE_PATH, label: "Halaman", Icon: PageIcon },
 ];
 
 function useActive() {
   const pathname = usePathname();
-  return (item) => (item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`));
+  return (item) => pathname === item.href || pathname.startsWith(`${item.href}/`);
 }
 
 // Active #2E68B2, idle #686C71 (nav-active / nav-idle theme colors).

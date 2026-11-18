@@ -1,37 +1,22 @@
-// Dashboard navigation icons. They use currentColor so the nav sets active/idle colors.
+// Dashboard icons.
+
+// Official single-color icons from /public/images. They are drawn as a mask, so the nav can tint them
+// with the current text color (active #2E68B2, idle #686C71) without separate files per state.
+function MaskIcon({ src, className }) {
+  const mask = `url(${src}) center / contain no-repeat`;
+  return <span aria-hidden="true" className={`inline-block bg-current ${className}`} style={{ mask, WebkitMask: mask }} />;
+}
 
 export function SummaryIcon({ className = "size-6" }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <rect x="3" y="3" width="4.5" height="18" rx="2.25" />
-      <rect x="9.75" y="9" width="4.5" height="12" rx="2.25" />
-      <rect x="16.5" y="14" width="4.5" height="7" rx="2.25" />
-    </svg>
-  );
+  return <MaskIcon src="/images/summary.svg" className={className} />;
 }
 
 export function SupportIcon({ className = "size-6" }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        fill="currentColor"
-        d="M9 2.5h6a1 1 0 0 1 1 1V4h1.5A3.5 3.5 0 0 1 21 7.5v10A3.5 3.5 0 0 1 17.5 21h-11A3.5 3.5 0 0 1 3 17.5v-10A3.5 3.5 0 0 1 6.5 4H8v-.5a1 1 0 0 1 1-1Zm.5 1.5v1h5V4h-5Zm2.5 5.6c.45-.62 1.1-.95 1.85-.95 1.3 0 2.3 1.02 2.3 2.3 0 1.9-2.2 3.4-4.15 4.9-1.95-1.5-4.15-3-4.15-4.9 0-1.28 1-2.3 2.3-2.3.75 0 1.4.33 1.85.95Z"
-      />
-    </svg>
-  );
+  return <MaskIcon src="/images/support.svg" className={className} />;
 }
 
 export function PageIcon({ className = "size-6" }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
-      <path d="M20 12v5.5a3.5 3.5 0 0 1-3.5 3.5h-9A3.5 3.5 0 0 1 4 17.5v-11A3.5 3.5 0 0 1 7.5 3H13" />
-      <path d="M8 9.5h3.5M8 13.5h3.5M8 17h5" />
-      <path d="M15 9.5h2.5M16.25 6h-.01" strokeWidth="1.2" />
-      <rect x="15.5" y="2.5" width="5" height="7" rx="1.2" fill="currentColor" stroke="none" />
-    </svg>
-  );
+  return <MaskIcon src="/images/page.png" className={className} />;
 }
 
 export function BackArrowIcon({ className = "size-6" }) {
