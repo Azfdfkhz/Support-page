@@ -8,10 +8,15 @@ import { READY_PATH } from "@/constants/routes";
 import { SHORT_DOMAIN } from "@/lib/config";
 import { ApiError } from "@/lib/api";
 import { defaultSlug } from "@/lib/slug";
-import { normalizeHandle } from "@/lib/validators";
+import { normalizeHandle, validateSlug } from "@/lib/validators";
 import { registerSupportPage } from "@/services/registerService";
 
 const MAX_BIO = 300;
+// Batas upload saat pendaftaran sengaja lebih kecil (1 MB) agar onboarding lebih cepat.
+// Di halaman pengaturan dashboard (PageSettingsForm) batasnya 5 MB karena koneksi lebih stabil.
+// Sesuaikan batas di backend untuk masing-masing endpoint:
+//   POST /support-pages  → terima s/d 1 MB
+//   PATCH /support-pages/me → terima s/d 5 MB
 const MAX_PHOTO_BYTES = 1 * 1024 * 1024;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 
@@ -110,12 +115,14 @@ export default function RegisterForm({ account }) {
       handles[field] = value;
       if (error) next[field] = error;
     }
+    const slugError = validateSlug(slug.trim());
+    if (slugError) next.slug = slugError;
     if (!photo) next.photo = "Foto sampul wajib diunggah.";
     if (!bio.trim()) next.bio = "Bio wajib diisi.";
     setErrors(next);
     if (Object.keys(next).length > 0) {
       // Bring the first problem into view, in on-screen order.
-      const first = ["photo", "bio", "instagram", "tiktok", "facebook"].find((field) => next[field]);
+      const first = ["photo", "bio", "instagram", "tiktok", "facebook", "slug"].find((field) => next[field]);
       const target = first === "photo" ? fileInput.current?.nextElementSibling : document.getElementById(first);
       target?.scrollIntoView({ behavior: "smooth", block: "center" });
       if (first !== "photo") target?.focus({ preventScroll: true });
@@ -218,6 +225,7 @@ export default function RegisterForm({ account }) {
             {slug}
           </span>
         </div>
+        <FieldError id="slug-error" message={errors.slug} />
       </div>
 
       <button

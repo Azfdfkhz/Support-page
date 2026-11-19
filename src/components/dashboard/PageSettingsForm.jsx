@@ -10,6 +10,9 @@ import { normalizeHandle } from "@/lib/validators";
 import { updateSupportPage } from "@/services/pageSettingsService";
 
 const MAX_BIO = 300;
+// Batas upload di halaman pengaturan lebih besar (5 MB) karena creator sudah login di dashboard.
+// Saat pendaftaran batasnya 1 MB (lihat RegisterForm) agar onboarding lebih cepat.
+// Backend endpoint yang perlu mendukung ukuran ini: PATCH /support-pages/me
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 

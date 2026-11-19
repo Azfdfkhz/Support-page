@@ -1,23 +1,17 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import TextAreaField from "@/components/ui/TextAreaField";
-import { confirmPath } from "@/constants/routes";
 import { MAX_SUPPORT_AMOUNT, MIN_SUPPORT_AMOUNT, SUPPORT_AMOUNT_PRESETS } from "@/constants/supportAmounts";
 import { formatCurrency } from "@/utils/formatCurrency";
 import AmountSelector from "./AmountSelector";
 
 export default function SupportForm({ creatorName, creatorSlug }) {
-  const router = useRouter();
   const [presetAmount, setPresetAmount] = useState(null);
   const [isCustom, setIsCustom] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
-  // True only while the navigation to the confirm page is in flight. It ends by itself when that
-  // navigation finishes, so coming back to this page never shows a stuck "Memproses...".
-  const [isPending, startTransition] = useTransition();
 
   const amount = isCustom ? Number(customAmount) : presetAmount;
 
@@ -56,14 +50,11 @@ export default function SupportForm({ creatorName, creatorSlug }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (isPending) return;
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    startTransition(() => {
-      router.push(confirmPath({ slug: creatorSlug, amount, message: message.trim() }));
-    });
+    // Submit handler — belum disambungkan ke halaman pembayaran/konfirmasi
   }
 
   return (
@@ -102,12 +93,10 @@ export default function SupportForm({ creatorName, creatorSlug }) {
 
         <button
           type="submit"
-          disabled={isPending}
-          className="mt-4 h-[3.25rem] w-full rounded-full bg-brand text-base font-bold text-white shadow-[0_0.375rem_0.875rem_rgba(47,103,178,0.3)] transition-colors hover:bg-brand-dark disabled:opacity-60"
+          className="mt-4 h-[3.25rem] w-full rounded-full bg-brand text-base font-bold text-white shadow-[0_0.375rem_0.875rem_rgba(47,103,178,0.3)] transition-colors hover:bg-brand-dark"
         >
-          {isPending ? "Memproses..." : "Kirim Support"}
+          Kirim Support
         </button>
-
       </form>
     </section>
   );

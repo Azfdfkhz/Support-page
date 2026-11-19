@@ -5,6 +5,17 @@ import CampaignListSection from "@/components/campaign/CampaignListSection";
 import CampaignListSkeleton from "@/components/campaign/CampaignListSkeleton";
 import { mockCreator } from "@/data/mockCreator";
 
+// ─── DEV PREVIEW ONLY ────────────────────────────────────────────────────────
+// Route /support adalah halaman preview statis untuk memudahkan pengembangan UI.
+// BUKAN halaman creator yang sesungguhnya.
+//
+// Halaman creator nyata ada di: /[slug]/page.js
+// — mengambil data dari API (GET /creators/{slug})
+// — ditampilkan di URL seperti /naya, /budi, dst.
+//
+// File ini TIDAK perlu diubah saat integrasi backend.
+// ─────────────────────────────────────────────────────────────────────────────
+
 const MOCK_SLUG = "naya";
 
 export const metadata = {
