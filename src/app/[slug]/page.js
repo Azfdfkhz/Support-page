@@ -9,6 +9,10 @@ import { getCreator } from "@/services/creatorService";
 
 export const metadata = { title: "Support Page" };
 
+export async function generateStaticParams() {
+  return [{ slug: "naya" }, { slug: "nadya" }];
+}
+
 async function CreatorContent({ params }) {
   const { slug } = await params;
   // Invalid or reserved slugs (e.g. /robots.txt) are a plain 404.
