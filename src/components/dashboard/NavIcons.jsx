@@ -1,9 +1,11 @@
+import { assetPath } from "@/lib/config";
+
 // Dashboard icons.
 
 // Official single-color icons from /public/images. They are drawn as a mask, so the nav can tint them
 // with the current text color (active #2E68B2, idle #686C71) without separate files per state.
 function MaskIcon({ src, className }) {
-  const mask = `url(${src}) center / contain no-repeat`;
+  const mask = `url(${assetPath(src)}) center / contain no-repeat`;
   return <span aria-hidden="true" className={`inline-block bg-current ${className}`} style={{ mask, WebkitMask: mask }} />;
 }
 

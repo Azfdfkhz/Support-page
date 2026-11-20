@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PageSkeleton from "@/components/onboarding/PageSkeleton";
 import ProgressLine from "@/components/onboarding/ProgressLine";
 import ReadyActions from "@/components/onboarding/ReadyActions";
+import { assetPath } from "@/lib/config";
 import { REGISTER_PATH } from "@/constants/routes";
 import { validateSlug } from "@/lib/validators";
 
@@ -32,7 +33,7 @@ export default function ReadyClient() {
 
       <div className="mt-10 flex flex-col items-center text-center">
         <div className="relative size-[15rem]">
-          <Image src="/Support-success-card-with-gift.png" alt="" fill priority sizes="240px" className="object-contain" />
+          <Image src={assetPath("/Support-success-card-with-gift.png")} alt="" fill priority sizes="240px" className="object-contain" />
         </div>
         <h1 className="mt-8 text-[1.5rem] font-bold leading-tight text-ink">
           Support Page siap! <span aria-hidden="true">🎉</span>

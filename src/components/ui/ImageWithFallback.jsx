@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { assetPath } from "@/lib/config";
 
 /**
  * Renders an image that fills its parent, or a neutral placeholder when src is empty.
@@ -10,7 +11,7 @@ export default function ImageWithFallback({ src, alt = "", className = "", sizes
   }
   return (
     <Image
-      src={src}
+      src={assetPath(src)}
       alt={alt}
       fill
       sizes={sizes}

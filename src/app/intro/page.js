@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Shell from "@/components/onboarding/Shell";
 import { REGISTER_PATH } from "@/constants/routes";
+import { assetPath } from "@/lib/config";
 
 export const metadata = { title: "Buat Support Page untuk dirimu" };
 
 const benefits = [
-  { icon: "/Gift.png", title: "Terima dukungan lebih mudah", text: "Bagikan satu halaman untuk menerima support kapan saja." },
-  { icon: "/Profil-love.png", title: "Tampilkan dirimu", text: "Perkenalkan dirimu lewat foto, cerita, dan aktivitasmu." },
-  { icon: "/Share.png", title: "Mudah dibagikan", text: "Bagikan link support page ke audiensmu." },
+  { icon: assetPath("/Gift.png"), title: "Terima dukungan lebih mudah", text: "Bagikan satu halaman untuk menerima support kapan saja." },
+  { icon: assetPath("/Profil-love.png"), title: "Tampilkan dirimu", text: "Perkenalkan dirimu lewat foto, cerita, dan aktivitasmu." },
+  { icon: assetPath("/Share.png"), title: "Mudah dibagikan", text: "Bagikan link support page ke audiensmu." },
 ];
 
 const steps = ["Daftar", "Bagikan", "Terima support"];
@@ -18,7 +19,7 @@ export default function IntroPage() {
     <Shell>
       <div className="flex flex-1 flex-col px-6.5 pb-8 pt-5.25">
         <div className="relative aspect-364/223 w-full overflow-hidden rounded-[1.75rem] bg-brand-soft">
-          <Image src="/Waving-support-guide.svg" alt="" fill priority unoptimized sizes="414px" className="object-cover" />
+          <Image src={assetPath("/Waving-support-guide.svg")} alt="" fill priority unoptimized sizes="414px" className="object-cover" />
         </div>
 
         <h1 className="mt-6 text-[3rem] font-bold leading-normal text-ink">Buat Support Page untuk dirimu</h1>

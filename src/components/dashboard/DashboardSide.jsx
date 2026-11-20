@@ -14,6 +14,8 @@ export function MobileTopBar({ backHref }) {
   );
 }
 
+import { assetPath } from "@/lib/config";
+
 /** Desktop sidebar: back arrow, logo, menu. */
 export function Sidebar({ backHref }) {
   return (
@@ -24,7 +26,7 @@ export function Sidebar({ backHref }) {
         </Link>
           <div className="justify-self-center">
             <img
-              src="/images/Logo-SH.png"
+              src={assetPath("/images/Logo-SH.png")}
               alt="Sharing Happiness"
               className="h-auto w-auto object-contain"
             />

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { assetPath } from "@/lib/config";
 
 // Account photo, or the No-profil image on a #2858A4 circle when there is none.
 // `size` is in px at the 414px design width; it is rendered in rem so it scales with the page.
@@ -7,10 +8,10 @@ export default function AccountAvatar({ name, avatarUrl, size = 56 }) {
   return (
     <div className="relative shrink-0 overflow-hidden rounded-full bg-avatar" style={{ width: dimension, height: dimension }}>
       {avatarUrl ? (
-        <Image src={avatarUrl} alt={name} fill unoptimized sizes={`${size}px`} className="object-cover" />
+        <Image src={assetPath(avatarUrl)} alt={name} fill unoptimized sizes={`${size}px`} className="object-cover" />
       ) : (
         <Image
-          src="/No-profil.png"
+          src={assetPath("/No-profil.png")}
           alt=""
           aria-hidden="true"
           width={47}
